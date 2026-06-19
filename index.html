@@ -15,51 +15,62 @@
     body {
       margin: 0;
       font-family: "MakSynthFont", Arial, sans-serif;
-      background: #0f0f10;
-      color: white;
+      background: #0b0b0d;
+      color: #f2f2f2;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       text-align: center;
-    }
-
-    .container {
-      max-width: 700px;
       padding: 20px;
     }
 
+    .container {
+      max-width: 720px;
+    }
+
     h1 {
-      font-size: 52px;
-      margin-bottom: 10px;
-      letter-spacing: 2px;
+      font-size: 64px;
+      margin-bottom: 12px;
+      letter-spacing: 3px;
+      font-weight: 400;
     }
 
     p {
       font-size: 18px;
-      color: #cccccc;
-      line-height: 1.5;
+      color: #d6d6d6;
+      line-height: 1.7;
+      margin-bottom: 20px;
     }
 
     .button {
       display: inline-block;
-      margin-top: 20px;
-      padding: 12px 20px;
-      background: white;
-      color: black;
+      margin-top: 10px;
+      padding: 14px 22px;
+      background: #ffffff;
+      color: #000000;
       text-decoration: none;
       font-weight: bold;
-      border-radius: 8px;
+      border-radius: 10px;
+      transition: 0.2s ease;
     }
 
     .button:hover {
-      background: #dddddd;
+      background: #e6e6e6;
     }
 
     .small {
-      margin-top: 40px;
-      font-size: 14px;
-      color: #777;
+      margin-top: 50px;
+      font-size: 15px;
+      color: #9a9a9a;
+      line-height: 1.6;
+    }
+
+    /* subtle improvement for readability */
+    .subtitle {
+      font-size: 20px;
+      color: #cfcfcf;
+      margin-bottom: 25px;
     }
   </style>
 </head>
@@ -68,9 +79,13 @@
   <div class="container">
     <h1>MAK SYNTH</h1>
 
+    <p class="subtitle">
+      A hands-on synthesizer kit for learning sound design, electronics, and music production.
+    </p>
+
     <p>
-      MakSynth is a DIY educational synthesizer kit designed to teach
-      sound design, electronics, and music production through hands-on building.
+      MAK SYNTH is a DIY educational synthesizer designed for classroom workshops and library programs.
+      Build it, wire it, and learn how sound is created from the ground up.
     </p>
 
     <a class="button" href="#">
@@ -78,7 +93,8 @@
     </a>
 
     <p class="small">
-      Built for classroom workshops and library learning programs.
+      Built for hands-on learning in schools and community spaces.<br/>
+      Designed, prototyped, and developed by MAK SYNTH.
     </p>
   </div>
 </body>
