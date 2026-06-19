@@ -1,1 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mak Synth</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0f0f12;
+            color: #ffffff;
+            line-height: 1.6;
+        }
 
+        header {
+            padding: 60px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 15px;
+            background: #111;
+            position: sticky;
+            top: 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+        }
+
+        nav a:hover {
+            opacity: 1;
+        }
+
+        section {
+            padding: 60px 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .card {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: #111;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 15px;
+            background: #4f46e5;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .btn:hover {
+            background: #3730a3;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Mak Synth</h1>
+        <p>A DIY Arduino-powered synthesizer designed for learning sound design</p>
+        <a class="btn" href="#about">Explore the Project</a>
+    </header>
+
+    <nav>
+        <a href="#about">About</a>
+        <a href="#features">Features</a>
+        <a href="#build">Build</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <section id="about">
+        <h2>About</h2>
+        <div class="card">
+            <p>
+                Mak Synth is a hands-on synthesizer project built using Arduino, custom PCBs,
+                and SuperCollider. It’s designed to teach sound design through physical interaction.
+            </p>
+        </div>
+    </section>
+
+    <section id="features">
+        <h2>Features</h2>
+        <div class="card">
+            <ul>
+                <li>12 physical cantilever keys</li>
+                <li>6 analog potentiometers for sound shaping</li>
+                <li>Arduino + SuperCollider integration</li>
+                <li>Custom PCB and modular wiring system</li>
+                <li>Monophonic synth engine with ADSR control</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="build">
+        <h2>Build Process</h2>
+        <div class="card">
+            <p>
+                The synth is designed for modular assembly using header pins, 3D printed parts,
+                and minimal soldering. The goal is accessibility and educational use in workshops.
+            </p>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Contact</h2>
+        <div class="card">
+            <p>Want to collaborate or learn more?</p>
+            <p>Email: yourname@example.com</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Mak Synth Project</p>
+    </footer>
+
+</body>
+</html>
