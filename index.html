@@ -1,55 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>MakSynth 3D</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MakSynth</title>
+
   <style>
-    body { margin: 0; overflow: hidden; }
-    canvas { display: block; }
+    /* Load custom font */
+    @font-face {
+      font-family: "MakSynthFont";
+      src: url("./maksynth.ttf");
+    }
+
+    body {
+      margin: 0;
+      font-family: "MakSynthFont", Arial, sans-serif;
+      background: #0f0f10;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 700px;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 52px;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+
+    p {
+      font-size: 18px;
+      color: #cccccc;
+      line-height: 1.5;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: white;
+      color: black;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 8px;
+    }
+
+    .button:hover {
+      background: #dddddd;
+    }
+
+    .small {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #777;
+    }
   </style>
 </head>
+
 <body>
+  <div class="container">
+    <h1>MakSynth</h1>
 
-<script type="module">
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
-import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
+    <p>
+      MakSynth is a DIY educational synthesizer kit designed to teach
+      sound design, electronics, and music production through hands-on building.
+    </p>
 
-const scene = new THREE.Scene();
+    <a class="button" href="#">
+      View Assembly Guide (coming soon)
+    </a>
 
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
-camera.position.z = 3;
-
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-
-scene.add(new THREE.AmbientLight(0xffffff, 1));
-
-let model;
-
-const loader = new GLTFLoader();
-loader.load("./model.glb", (gltf) => {
-  model = gltf.scene;
-  scene.add(model);
-});
-
-function animate() {
-  requestAnimationFrame(animate);
-
-  if (model) {
-    model.rotation.y += 0.01;
-  }
-
-  renderer.render(scene, camera);
-}
-
-animate();
-</script>
-
+    <p class="small">
+      Built for classroom workshops and library learning programs.
+    </p>
+  </div>
 </body>
 </html>
