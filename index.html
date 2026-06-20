@@ -1,76 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MAK SYNTH</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAK SYNTH</title>
 
-  <style>
-    @font-face {
-      font-family: "MakSynthFont";
-      src: url("./synthekR_ldr%5B1%5D.ttf");
-    }
+<style>
+@font-face {
+    font-family: "MakSynthFont";
+    src: url("./synthekR_ldr%5B1%5D.ttf");
+}
 
-    body {
-      margin: 0;
-      background: #0b0b0d;
-      color: #f2f2f2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      text-align: center;
-      padding: 20px;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    }
+html {
+    scroll-behavior: smooth;
+}
 
-    .container {
-      max-width: 700px;
-    }
+body {
+    margin: 0;
+    background: #0b0b0d;
+    color: #f2f2f2;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
 
-    h1 {
-      font-family: "MakSynthFont", Arial, sans-serif;
-      font-size: 68px;
-      margin-bottom: 20px;
-      letter-spacing: 3px;
-      font-weight: 400;
-    }
+/* NAVIGATION */
 
-    p {
-      font-size: 18px;
-      color: #cfcfcf;
-      line-height: 1.6;
-      margin-bottom: 30px;
-    }
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 70px;
 
-    .button {
-      display: inline-block;
-      padding: 14px 26px;
-      background: #ffffff;
-      color: #000000;
-      text-decoration: none;
-      font-weight: 600;
-      border-radius: 10px;
-      transition: 0.2s ease;
-    }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-    .button:hover {
-      background: #e6e6e6;
-    }
-  </style>
+    padding: 0 40px;
+    box-sizing: border-box;
+
+    background: rgba(11,11,13,0.85);
+    backdrop-filter: blur(10px);
+
+    z-index: 1000;
+}
+
+.logo {
+    font-family: "MakSynthFont";
+    font-size: 30px;
+    letter-spacing: 2px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 35px;
+}
+
+.nav-links a {
+    color: #f2f2f2;
+    text-decoration: none;
+    opacity: 0.75;
+    transition: 0.2s;
+}
+
+.nav-links a:hover {
+    opacity: 1;
+}
+
+/* HERO */
+
+.hero {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    padding: 20px;
+}
+
+.hero-content {
+    max-width: 700px;
+}
+
+.hero h1 {
+    font-family: "MakSynthFont";
+    font-size: 72px;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.hero p {
+    font-size: 18px;
+    color: #cfcfcf;
+    line-height: 1.6;
+}
+
+/* SECTIONS */
+
+section {
+    max-width: 900px;
+    margin: auto;
+    padding: 120px 30px;
+}
+
+section h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+section p {
+    color: #cfcfcf;
+    line-height: 1.8;
+    font-size: 18px;
+}
+
+.divider {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    max-width: 900px;
+    margin: auto;
+}
+</style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>MAK SYNTH</h1>
+
+<nav>
+    <div class="logo">MAK SYNTH</div>
+
+    <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#instructions">Instructions</a>
+        <a href="#iterations">Iterations</a>
+        <a href="#files">Files</a>
+    </div>
+</nav>
+
+<div class="hero">
+    <div class="hero-content">
+        <h1>MAK SYNTH</h1>
+
+        <p>
+            A hands-on synthesizer kit for learning sound design,
+            electronics, and music production.
+        </p>
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<section id="about">
+    <h2>About</h2>
 
     <p>
-      A hands-on synthesizer kit for learning sound design, electronics, and music production.
+        Mak Synth is a hardware synthesizer designed to make sound design
+        physical and intuitive. Built using Arduino, custom electronics,
+        3D printed components, and SuperCollider, the project aims to
+        teach synthesis through direct interaction rather than software menus.
     </p>
+</section>
 
-    <a class="button" href="#">
-      COMING SOON
-    </a>
-  </div>
+<div class="divider"></div>
+
+<section id="instructions">
+    <h2>Instructions</h2>
+
+    <p>
+        Assembly guides, wiring diagrams, software setup instructions,
+        and classroom resources will be published here as the project
+        reaches completion.
+    </p>
+</section>
+
+<div class="divider"></div>
+
+<section id="iterations">
+    <h2>Iterations</h2>
+
+    <p>
+        Follow the development of Mak Synth from early concepts and CAD
+        prototypes through PCB revisions, firmware development, and
+        final hardware refinement.
+    </p>
+</section>
+
+<div class="divider"></div>
+
+<section id="files">
+    <h2>Files</h2>
+
+    <p>
+        CAD files, PCB files, firmware, documentation, and other project
+        resources will be available here for download.
+    </p>
+</section>
+
 </body>
 </html>
