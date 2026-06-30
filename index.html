@@ -72,39 +72,41 @@ nav {
 }
 
 .hero-content {
-    max-width: 900px; /* Expanded to allow for a larger image layout */
+    max-width: 900px;
 }
 
 .hero h1 {
     font-family: "MakSynthFont";
     font-size: 72px;
     letter-spacing: 3px;
-    margin-bottom: 20px;
-    font-weight: 400;
-}
-
-.hero p {
-    font-size: 18px;
-    color: #111111;
-    font-weight: 600;
-    line-height: 1.6;
     margin-bottom: 40px;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    font-weight: 400;
 }
 
 /* LARGER HERO IMAGE STYLING */
 .hero-image {
     width: 100%;
-    max-width: 800px; /* Increased from 500px to make it prominent */
+    max-width: 800px;
     height: auto;
     border-radius: 12px;
-    margin-bottom: 40px;
+    margin-bottom: 25px; /* Tighter gap between image and caption */
     display: block;
     margin-left: auto;
     margin-right: auto;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05); /* Added a subtle shadow for depth */
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+/* SMALLER, ITALICIZED DESCRIPTION BELOW IMAGE */
+.hero p {
+    font-size: 15px; /* Made smaller */
+    font-style: italic; /* Italicized */
+    color: #555555; /* Softened color slightly for caption style */
+    font-weight: 500;
+    line-height: 1.6;
+    margin-bottom: 40px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .button {
@@ -143,16 +145,17 @@ nav {
     .hero h1 {
         font-size: 42px;
         letter-spacing: 2px;
-    }
-
-    .hero p {
-        font-size: 16px;
-        padding: 0 10px;
         margin-bottom: 30px;
     }
 
     .hero-image {
         max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .hero p {
+        font-size: 14px;
+        padding: 0 10px;
         margin-bottom: 30px;
     }
 
@@ -182,12 +185,12 @@ nav {
 
         <h1>MAK SYNTH</h1>
 
+        <img class="hero-image" src="IMG_0055.JPG" alt="Mak Synth Kit">
+
         <p>
             A hands-on synthesizer kit for learning sound design,
             electronics, and music production.
         </p>
-
-        <img class="hero-image" src="IMG_0055.JPG" alt="Mak Synth Kit">
 
         <a class="button" href="#">
             COMING SOON
