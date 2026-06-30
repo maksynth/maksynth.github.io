@@ -1,1 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Iterations - Mak Synth</title>
+<meta name="description" content="The design evolution and prototyping stages of Mak Synth.">
+
+<style>
+@font-face {
+    font-family: "MakSynthFont";
+    src: url("./synthekR_ldr%5B1%5D.ttf");
+}
+
+body {
+    margin: 0;
+    background: #ffffff;
+    color: #111111;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* NAVIGATION */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    box-sizing: border-box;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #eaeaea;
+    z-index: 1000;
+}
+
+.logo {
+    font-family: "MakSynthFont";
+    font-size: 30px;
+    letter-spacing: 2px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 35px;
+}
+
+.nav-links a {
+    color: #111111;
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    font-size: 14px;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    opacity: 1;
+}
+
+/* CONTENT CONTAINER */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 140px 20px 60px;
+    box-sizing: border-box;
+    text-align: center; /* Centers the heading and image */
+}
+
+h1 {
+    font-family: "MakSynthFont";
+    font-size: 48px;
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+    font-weight: 400;
+}
+
+/* LARGE PROTOTYPE IMAGE STYLING */
+.prototype-image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 12px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    nav { padding: 0 16px; }
+    .logo { font-size: 22px; }
+    .nav-links { gap: 12px; }
+    .nav-links a { font-size: 12px; }
+    .container { padding-top: 110px; }
+    h1 { font-size: 36px; }
+    .prototype-image { max-width: 100%; }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">MAK SYNTH</div>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="instructions.html">Instructions</a>
+        <a href="iterations.html" class="active">Iterations</a>
+        <a href="files.html">Files</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>Iterations</h1>
+
+    <img class="prototype-image" src="firstprototype.png" alt="First Prototype of Mak Synth">
+</div>
+
+</body>
+</html>
