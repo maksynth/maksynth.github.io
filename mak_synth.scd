@@ -5,7 +5,7 @@ s.boot;
 s.waitForBoot({
 
     // =========================
-    // UI
+    // UI VARIABLES
     // =========================
     var win, scopeView, controlView, waveMenu, statusText;
     var stethoscope, freqScope, envGraph;
@@ -16,7 +16,7 @@ s.waitForBoot({
     var adsrBox, filterBox;
     var adsrHeader, filterHeader;
     var octMinusButton, octPlusButton;
-    var topRowControls, octaveGroup, waveGroup;
+    var topRowControls, octaveGroup, waveGroup, osGroup, osMenu;
 
     var darkBg = Color.fromHexString("#121212");
     var cardBg = Color.fromHexString("#1E1E1E");
@@ -26,11 +26,17 @@ s.waitForBoot({
     var dimTextC = Color.gray(0.6);
 
     var attackLabel, decayLabel, sustainLabel, releaseLabel;
-    var cutoffLabel, resLabel, octaveLabel, waveLabel;
+    var cutoffLabel, resLabel, octaveLabel, waveLabel, osLabel;
+
+    // PERFORMANCE FLAG: Tracks if the GUI needs to be redrawn
+    var guiDirty = true;
 
     // =========================
-    // STATE (NO “DEAD” VALUES)
+    // OS DETECTION & STATE
     // =========================
+    ~detectedOS = thisProcess.platform.name; // \windows, \osx, or \linux
+    ~osIndex = if(~detectedOS == \windows) { 0 } { 1 }; // 0: Windows, 1: macOS
+
     ~attack = 0.02;
     ~decay = 0.15;
     ~sustain = 0.7;
@@ -48,13 +54,18 @@ s.waitForBoot({
     ~voices = Array.fill(12, nil);
     ~buttonState = Array.fill(12, 0);
 
+    // Track active voice count dynamically
+    ~activeCount = 0;
+
     ~cutoffBus = Bus.control(s,1);
     ~resBus = Bus.control(s,1);
+    ~countBus = Bus.control(s,1);
 
     s.sync;
 
     ~cutoffBus.set(~cutoff);
     ~resBus.set(~res);
+    ~countBus.set(0);
 
     // =========================
     // SYNTH
@@ -62,11 +73,13 @@ s.waitForBoot({
     SynthDef(\voice, { |freq=440, gate=0, wave=0,
         attack=0.02, decay=0.15, sustain=0.7, release=0.2|
 
-        var sig, env, cutoff, res;
+        var sig, env, cutoff, res, voiceCount, ampScaler;
 
-        // FIXED: Added Lag.kr with a 0.1-second time constant to smooth out pot movements
-        cutoff = Lag.kr(In.kr(~cutoffBus, 1), 0.1);
-        res = Lag.kr(In.kr(~resBus, 1), 0.1);
+        // Read real-time voice count from bus for volume management
+        voiceCount = In.kr(~countBus, 1);
+
+        cutoff = Lag3.kr(In.kr(~cutoffBus, 1), 0.15);
+        res = In.kr(~resBus, 1); // Direct mapping without Lag3
 
         env = EnvGen.kr(
             Env.adsr(attack, decay, sustain, release),
@@ -81,8 +94,12 @@ s.waitForBoot({
             WhiteNoise.ar(0.05)
         ]);
 
-        sig = RLPF.ar(sig, cutoff.clip(80,12000), res.clip(0.01,0.99));
-        Out.ar(0, sig * env * 0.25 ! 2);
+        sig = RLPF.ar(sig, cutoff.clip(40, 15000), res.clip(0.01, 0.85));
+
+        // POLYPHONIC HEADROOM COMPENSATION
+        ampScaler = 0.25 / (voiceCount.max(1).sqrt);
+
+        Out.ar(0, sig * env * ampScaler ! 2);
     }).add;
 
     s.sync;
@@ -91,13 +108,12 @@ s.waitForBoot({
     // NOTE SYSTEM (SAFE)
     // =========================
     ~noteOn = { |id|
-        var freq;
-
-        freq = (~baseMidi + id).midicps;
+        var freq = (~baseMidi + id).midicps;
 
         if(~voices[id].notNil){
             ~voices[id].set(\gate,0);
             ~voices[id] = nil;
+            ~activeCount = (~activeCount - 1).max(0);
         };
 
         ~voices[id] = Synth(\voice, [
@@ -109,13 +125,32 @@ s.waitForBoot({
             \release, ~release,
             \gate, 1
         ]);
+
+        ~activeCount = ~activeCount + 1;
+        ~countBus.set(~activeCount);
+        guiDirty = true;
     };
 
     ~noteOff = { |id|
         if(~voices[id].notNil){
             ~voices[id].set(\gate,0);
             ~voices[id] = nil;
+            ~activeCount = (~activeCount - 1).max(0);
+            ~countBus.set(~activeCount);
+            guiDirty = true;
         };
+    };
+
+    ~allNotesOff = {
+        ~voices.do({ |voice, id|
+            if(voice.notNil) {
+                voice.set(\gate, 0);
+                ~voices[id] = nil;
+            }
+        });
+        ~activeCount = 0;
+        ~countBus.set(0);
+        guiDirty = true;
     };
 
     // =========================
@@ -163,7 +198,18 @@ s.waitForBoot({
     topRowControls = View();
     topRowControls.layout = HLayout().margins_(0).spacing_(0);
 
-    statusText = StaticText().string_("READY").stringColor_(textC).font_(Font(Font.defaultSansFace, 14, true)).fixedWidth_(90);
+    statusText = StaticText().string_("READY").stringColor_(textC).font_(Font(Font.defaultSansFace, 14, true)).fixedWidth_(100);
+
+    osGroup = View();
+    osGroup.layout = HLayout(
+        osLabel = StaticText().string_("<b>OS:</b>").stringColor_(textC).font_(Font(Font.defaultSansFace, 14)),
+        osMenu = PopUpMenu().items_(["Windows", "macOS"]).value_(~osIndex).minHeight_(35).fixedWidth_(90)
+    ).margins_(0).spacing_(8);
+
+    osMenu.action_({ |menu|
+        ~osIndex = menu.value;
+        ~reconnectSerial.value;
+    });
 
     waveGroup = View();
     waveGroup.layout = HLayout(
@@ -186,7 +232,7 @@ s.waitForBoot({
         if(~octaveIndex > 0) {
             ~octaveIndex = ~octaveIndex - 1;
             ~baseMidi = ~octaves[~octaveIndex];
-            ~updateGUI.value;
+            guiDirty = true;
         };
     });
 
@@ -194,11 +240,13 @@ s.waitForBoot({
         if(~octaveIndex < 3) {
             ~octaveIndex = ~octaveIndex + 1;
             ~baseMidi = ~octaves[~octaveIndex];
-            ~updateGUI.value;
+            guiDirty = true;
         };
     });
 
     topRowControls.layout.add(statusText);
+    topRowControls.layout.add(nil, stretch: 1);
+    topRowControls.layout.add(osGroup);
     topRowControls.layout.add(nil, stretch: 1);
     topRowControls.layout.add(waveGroup);
     topRowControls.layout.add(nil, stretch: 1);
@@ -268,7 +316,7 @@ s.waitForBoot({
     controlView.layout.add(envContainer, stretch: 1);
 
     // =========================
-    // GUI UPDATE
+    // DEBOUNCED GUI ENGINE
     // =========================
     ~updateGUI = {
         var totalTime, aX, dX, sX, rX, envData;
@@ -308,21 +356,67 @@ s.waitForBoot({
         }.defer;
     };
 
-    ~updateGUI.value;
+    Routine({
+        loop {
+            if(guiDirty) {
+                ~updateGUI.value;
+                guiDirty = false;
+            };
+            0.04.wait;
+        }
+    }).play(AppClock);
 
     // =========================
-    // SERIAL
+    // SERIAL (PLATFORM & AUTO-DETECT)
     // =========================
-    ~port = SerialPort.devices.detect({ |p|
-        p.contains("usb") or: { p.contains("COM") }
-    });
+    ~findPort = {
+        var devices = SerialPort.devices;
+        var matched;
 
-    if(~port.notNil){
-        ~port = SerialPort(~port, 115200);
-        statusText.string = "CONNECTED";
-    }{
-        statusText.string = "NO DEVICE";
+        if(~osIndex == 0) {
+            matched = devices.detect({ |p|
+                var path = p.asString.toLower;
+                path.contains("com") && path.contains("bluetooth").not
+            });
+        };
+
+        if(~osIndex == 1) {
+            matched = devices.detect({ |p|
+                var path = p.asString.toLower;
+                path.contains("tty.usbmodem") ||
+                path.contains("tty.usbserial") ||
+                path.contains("cu.usb") ||
+                path.contains("acm")
+            });
+        };
+
+        matched;
     };
+
+    ~reconnectSerial = {
+        if(~port.notNil) {
+            try { ~port.close };
+            ~port = nil;
+        };
+
+        ~detectedPort = ~findPort.value;
+
+        if(~detectedPort.notNil){
+            try {
+                ~port = SerialPort(~detectedPort, 115200);
+                { statusText.string = "CONNECTED" }.defer;
+                ("Connected (" ++ if(~osIndex == 0) {"Win"} {"Mac"} ++ ") at: " ++ ~detectedPort).postln;
+            } {
+                { statusText.string = "NO DEVICE" }.defer;
+                ~port = nil;
+            };
+        }{
+            { statusText.string = "NO DEVICE" }.defer;
+            ("No compatible device found for OS mode: " ++ if(~osIndex == 0) {"Windows"} {"macOS"}).postln;
+        };
+    };
+
+    ~reconnectSerial.value;
 
     ~buffer = "";
 
@@ -330,8 +424,25 @@ s.waitForBoot({
         var byte, msg, parts, type, id, val;
 
         loop {
-            if(~port.notNil){
-                while ({ byte = ~port.read; byte.notNil }, {
+            if(~port.notNil and: { ~detectedPort.notNil }) {
+                var currentDevices = SerialPort.devices;
+                var stillExists = currentDevices.includesEqual(~detectedPort);
+
+                if(stillExists.not) {
+                    "--- HARDWARE DISCONNECTED (USB PULLED) ---".postln;
+
+                    ~allNotesOff.value;
+
+                    try { ~port.close };
+                    ~port = nil;
+                    ~detectedPort = nil;
+
+                    { statusText.string = "NO DEVICE" }.defer;
+                };
+            };
+
+            if(~port.notNil and: { ~port.isOpen }) {
+                while ({ byte = ~port.next; byte.notNil }, {
                     byte = byte.asAscii;
 
                     if(byte == $\n){
@@ -365,7 +476,7 @@ s.waitForBoot({
                                         5, { ~res = val.linexp(0,1023,0.01,0.99); ~resBus.set(~res) }
                                     );
 
-                                    ~updateGUI.value;
+                                    guiDirty = true;
                                 };
                             };
                         };
@@ -378,14 +489,22 @@ s.waitForBoot({
                 });
             };
 
-            0.005.wait;
+            0.02.wait;
         };
     }).play(AppClock);
 
     win.onClose = {
         freqScope.kill;
         stethoscope.free;
+        if(~port.notNil) { ~port.close; };
     };
 
 });
 )
+
+
+SynthDef.new(\synth, {
+
+
+
+Server.killAll;
