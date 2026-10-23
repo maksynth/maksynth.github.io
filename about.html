@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>About - Mak Synth</title>
-<meta name="description" content="The story behind MAK Synth: ten independently developed synthesizer prototypes, custom PCB design, curriculum development, and community collaboration.">
+<meta name="description" content="The story behind MAK Synth: four independently developed synthesizer prototypes, custom PCB design, curriculum development, and community collaboration.">
 
 <style>
 @font-face {
@@ -413,7 +413,7 @@ input[type="range"] {
             MAK Synth started as an independent project driven by my interest
             in electronics, engineering, and music. What began as an idea
             gradually developed into a fully functional educational
-            synthesizer through ten different hardware prototypes.
+            synthesizer through four different hardware prototypes.
         </p>
 
         <p>
@@ -433,7 +433,7 @@ input[type="range"] {
     <section class="stats">
 
         <div>
-            <div class="stat-number">10</div>
+            <div class="stat-number">4</div>
             <div class="stat-label">Hardware prototypes</div>
         </div>
 
@@ -456,7 +456,7 @@ input[type="range"] {
 
         <div class="eyebrow">FROM CONCEPT TO PRODUCT</div>
 
-        <h2>10 ITERATIONS. ONE IDEA.</h2>
+        <h2>4 ITERATIONS. ONE IDEA.</h2>
 
         <p class="section-description">
             Every prototype presented a new opportunity to rethink the
@@ -489,7 +489,7 @@ input[type="range"] {
 
                 <div>
                     <div class="prototype-number" id="prototypeNumber">
-                        PROTOTYPE 01 / 10
+                        PROTOTYPE 01 / 04
                     </div>
 
                     <div class="prototype-caption" id="prototypeCaption">
@@ -498,7 +498,7 @@ input[type="range"] {
                 </div>
 
                 <div style="font-size:13px; color:#999;" id="prototypeCount">
-                    01 — 10
+                    01 — 04
                 </div>
 
             </div>
@@ -517,7 +517,7 @@ input[type="range"] {
                         type="range"
                         id="prototypeSlider"
                         min="0"
-                        max="9"
+                        max="3"
                         value="0"
                         step="1"
                         aria-label="Browse prototypes"
@@ -724,30 +724,6 @@ const prototypes = [
     },
     {
         image: "prototype-04.jpg",
-        caption: "Prototype 04"
-    },
-    {
-        image: "prototype-05.jpg",
-        caption: "Prototype 05"
-    },
-    {
-        image: "prototype-06.jpg",
-        caption: "Prototype 06"
-    },
-    {
-        image: "prototype-07.jpg",
-        caption: "Prototype 07"
-    },
-    {
-        image: "prototype-08.jpg",
-        caption: "Prototype 08"
-    },
-    {
-        image: "prototype-09.jpg",
-        caption: "Prototype 09"
-    },
-    {
-        image: "prototype-10.jpg",
         caption: "Final design"
     }
 
@@ -779,14 +755,14 @@ function updatePrototype() {
     document.getElementById("prototypeNumber").textContent =
         "PROTOTYPE " +
         String(currentPrototype + 1).padStart(2, "0") +
-        " / 10";
+        " / 04";
 
     document.getElementById("prototypeCaption").textContent =
         prototype.caption;
 
     document.getElementById("prototypeCount").textContent =
         String(currentPrototype + 1).padStart(2, "0") +
-        " — 10";
+        " — 04";
 
     slider.value = currentPrototype;
 
@@ -797,10 +773,10 @@ function changePrototype(direction) {
     currentPrototype += direction;
 
     if (currentPrototype < 0) {
-        currentPrototype = 9;
+        currentPrototype = 3;
     }
 
-    if (currentPrototype > 9) {
+    if (currentPrototype > 3) {
         currentPrototype = 0;
     }
 
