@@ -1,0 +1,13 @@
+/* TEAM */
+  Creator: [Name]
+  Contact: [Email or contact method]
+
+/* THANKS */
+  [Makerspaces, libraries, and testers to credit]
+
+/* SITE */
+  Last update: 2026-10-24
+  Language: English
+  Standards: HTML5, CSS3, ECMAScript
+  Components: SuperCollider, Arduino
+  Software: Static HTML, IBM Plex Sans, Synthek, Material Symbols

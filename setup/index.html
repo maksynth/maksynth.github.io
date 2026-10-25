@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en" class="no-js" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<title>MAK SYNTH - Setup guide</title>
+<meta name="description" content="Set up MAK Synth in three steps: download the files, flash the Arduino controller, and start the SuperCollider sound engine. Includes requirements and troubleshooting.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'sha256-gTMHJ7A/61sa0Mo5V2UnxBCPla0obF0m3E8FCkaYNo4=' 'sha256-CGK/n6jVfPQHz7g053S9yXsypMrCrG5CRsoWa5gpxh4='; connect-src 'self'; form-action 'self'; manifest-src 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://maksynth.com/setup/">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="author" href="/humans.txt">
+<meta property="og:site_name" content="MAK Synth">
+<meta property="og:type" content="website">
+<meta property="og:title" content="MAK SYNTH - Setup guide">
+<meta property="og:description" content="Set up MAK Synth in three steps: download the files, flash the Arduino controller, and start the SuperCollider sound engine. Includes requirements and troubleshooting.">
+<meta property="og:url" content="https://maksynth.com/setup/">
+<meta property="og:image" content="https://maksynth.com/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The MAK Synth controller with the wordmark MAK Synth">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/assets/fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/synthekR.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/boot.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<svg class="svg-sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><symbol id="i-arrow_back" viewBox="0 -960 960 960"><path d="m274-450 248 248-42 42-320-320 320-320 42 42-248 248h526v60H274Z"></path></symbol><symbol id="i-arrow_forward" viewBox="0 -960 960 960"><path d="M686-450H160v-60h526L438-758l42-42 320 320-320 320-42-42 248-248Z"></path></symbol><symbol id="i-build" viewBox="0 -960 960 960"><path d="M705-128 447-388q-23 8-46 13t-47 5q-97.08 0-165.04-67.67Q121-505.33 121-602q0-31 8.16-60.39T152-718l145 145 92-86-149-149q25.91-15.16 54.96-23.58Q324-840 354-840q99.17 0 168.58 69.42Q592-701.17 592-602q0 24-5 47t-13 46l259 258q11 10.96 11 26.48T833-198l-76 70q-10.7 11-25.85 11Q716-117 705-128Zm28-57 40-40-273-273q16-21 24-49.5t8-54.5q0-75-55.5-127T350-782l102 104q9 9 8.5 21.5T451-635L318-510q-9.27 8-21.64 8-12.36 0-20.36-8l-98-97q3 77 54.67 127T354-430q25 0 53-8t49-24l277 277ZM476-484Z"></path></symbol><symbol id="i-cable" viewBox="0 -960 960 960"><path d="M190-120q-13 0-21.5-8.5T160-150v-50h-40v-150q0-13 8.5-21.5T150-380h50v-310q0-64 47-107t113-43q63 0 106.5 43.5T510-690v420q0 38 26 64t64 26q41 0 70.5-25.5T700-270v-310h-50q-13 0-21.5-8.5T620-610v-150h40v-50q0-13 8.5-21.5T690-840h80q13 0 21.5 8.5T800-810v50h40v150q0 13-8.5 21.5T810-580h-50v310q0 64-47 107t-113 43q-63 0-106.5-43.5T450-270v-420q0-38-26-64t-64-26q-41 0-70.5 25.5T260-690v310h50q13 0 21.5 8.5T340-350v150h-40v50q0 13-8.5 21.5T270-120h-80Z"></path></symbol><symbol id="i-check" viewBox="0 -960 960 960"><path d="M378-246 154-470l43-43 181 181 384-384 43 43-427 427Z"></path></symbol><symbol id="i-check_circle" viewBox="0 -960 960 960"><path d="m421-298 283-283-46-45-237 237-120-120-45 45 165 166Zm59 218q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-156t86-127Q252-817 325-848.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82-31.5 155T763-197.5q-54 54.5-127 86T480-80Zm0-60q142 0 241-99.5T820-480q0-142-99-241t-241-99q-141 0-240.5 99T140-480q0 141 99.5 240.5T480-140Zm0-340Z"></path></symbol><symbol id="i-close" viewBox="0 -960 960 960"><path d="m249-207-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z"></path></symbol><symbol id="i-contrast" viewBox="0 -960 960 960"><path d="M324-111.5Q251-143 197-197t-85.5-127Q80-397 80-480t31.5-156Q143-709 197-763t127-85.5Q397-880 480-880t156 31.5Q709-817 763-763t85.5 127Q880-563 880-480t-31.5 156Q817-251 763-197t-127 85.5Q563-80 480-80t-156-31.5ZM500-140q137-10 228.5-106T820-480q0-138-91.5-234T500-820v680Z"></path></symbol><symbol id="i-dark_mode" viewBox="0 -960 960 960"><path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q8 0 17 .5t23 1.5q-36 32-56 79t-20 99q0 90 63 153t153 63q52 0 99-18.5t79-51.5q1 12 1.5 19.5t.5 14.5q0 150-105 255T480-120Zm0-60q109 0 190-67.5T771-406q-25 11-53.67 16.5Q688.67-384 660-384q-114.69 0-195.34-80.66Q384-545.31 384-660q0-24 5-51.5t18-62.5q-98 27-162.5 109.5T180-480q0 125 87.5 212.5T480-180Zm-4-297Z"></path></symbol><symbol id="i-developer_board" viewBox="0 -960 960 960"><path d="M150-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h600q24 0 42 18t18 42v60h60v60h-60v150h60v60h-60v150h60v60h-60v60q0 24-18 42t-42 18H150Zm0-60h600v-600H150v600Zm60-60h253v-200H210v200Zm283-336h197v-144H493v144ZM210-470h253v-250H210v250Zm283 230h197v-306H493v306ZM150-780v600-600Z"></path></symbol><symbol id="i-download" viewBox="0 -960 960 960"><path d="M480-313 287-506l43-43 120 120v-371h60v371l120-120 43 43-193 193ZM220-160q-24 0-42-18t-18-42v-143h60v143h520v-143h60v143q0 24-18 42t-42 18H220Z"></path></symbol><symbol id="i-format_size" viewBox="0 -960 960 960"><path d="M570-160v-540H360v-100h520v100H670v540H570Zm-360 0v-340H80v-100h360v100H310v340H210Z"></path></symbol><symbol id="i-graphic_eq" viewBox="0 -960 960 960"><path d="M285-240v-480h60v480h-60ZM450-80v-800h60v800h-60ZM120-400v-160h60v160h-60Zm495 160v-480h60v480h-60Zm165-160v-160h60v160h-60Z"></path></symbol><symbol id="i-light_mode" viewBox="0 -960 960 960"><path d="M579-381q41-41 41-99t-41-99q-41-41-99-41t-99 41q-41 41-41 99t41 99q41 41 99 41t99-41Zm-240.5 42.5Q280-397 280-480t58.5-141.5Q397-680 480-680t141.5 58.5Q680-563 680-480t-58.5 141.5Q563-280 480-280t-141.5-58.5ZM200-450H40v-60h160v60Zm720 0H760v-60h160v60ZM450-760v-160h60v160h-60Zm0 720v-160h60v160h-60ZM262-658l-100-97 43-44 96 100-39 41Zm494 496-98-100 41-41 99 98-42 43Zm-99-537 98-99 44 42-99 98-43-41ZM162-205l99-98 42 42-98 99-43-43Zm318-275Z"></path></symbol><symbol id="i-memory" viewBox="0 -960 960 960"><path d="M377-377v-205h205v205H377Zm60-60h85v-85h-85v85Zm-77 317v-80H260q-24 0-42-18t-18-42v-100h-80v-60h80v-124h-80v-60h80v-100q0-24 18-42t42-18h100v-76h60v76h124v-76h60v76h100q24 0 42 18t18 42v100h76v60h-76v124h76v60h-76v100q0 24-18 42t-42 18H604v80h-60v-80H420v80h-60Zm344-140v-444H260v444h444ZM480-480Z"></path></symbol><symbol id="i-menu" viewBox="0 -960 960 960"><path d="M120-240v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z"></path></symbol><symbol id="i-music_note" viewBox="0 -960 960 960"><path d="M286.5-163.5Q243-207 243-270t43.5-106.5Q330-420 393-420q28 0 50.5 8t39.5 22v-450h234v135H543v435q0 63-43.5 106.5T393-120q-63 0-106.5-43.5Z"></path></symbol><symbol id="i-open_in_new" viewBox="0 -960 960 960"><path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h279v60H180v600h600v-279h60v279q0 24-18 42t-42 18H180Zm202-219-42-43 398-398H519v-60h321v321h-60v-218L382-339Z"></path></symbol><symbol id="i-piano" viewBox="0 -960 960 960"><path d="M180-120q-24 0-42-18t-18-42v-600q0-23 18-41.5t42-18.5h600q23 0 41.5 18.5T840-780v600q0 24-18.5 42T780-120H180Zm0-60h157v-210h-20q-12.75 0-21.37-8.63Q287-407.25 287-420v-360H180v600Zm443 0h157v-600H673v360q0 12.75-8.62 21.37Q655.75-390 643-390h-20v210Zm-246 0h206v-210h-20q-12.75 0-21.37-8.63Q533-407.25 533-420v-360H427v360q0 12.75-8.62 21.37Q409.75-390 397-390h-20v210Z"></path></symbol><symbol id="i-school" viewBox="0 -960 960 960"><path d="M479-120 189-279v-240L40-600l439-240 441 240v317h-60v-282l-91 46v240L479-120Zm0-308 315-172-315-169-313 169 313 172Zm0 240 230-127v-168L479-360 249-485v170l230 127Zm1-240Zm-1 74Zm0 0Z"></path></symbol><symbol id="i-terminal" viewBox="0 -960 960 960"><path d="M140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm0-60h680v-436H140v436Zm160-72-42-42 103-104-104-104 43-42 146 146-146 146Zm190 4v-60h220v60H490Z"></path></symbol><symbol id="i-tune" viewBox="0 -960 960 960"><path d="M427-120v-225h60v83h353v60H487v82h-60Zm-307-82v-60h247v60H120Zm187-166v-82H120v-60h187v-84h60v226h-60Zm120-82v-60h413v60H427Zm166-165v-225h60v82h187v60H653v83h-60Zm-473-83v-60h413v60H120Z"></path></symbol><symbol id="i-usb" viewBox="0 -960 960 960"><path d="M428-100q-20-20-20-52 0-22 11-40t31-29v-111H302q-24 0-42-18t-18-42v-109q-20-9-31-26.61t-11-40.11Q200-600 220-620t52-20q32 0 52 20t20 52.41q0 22.59-11 40.09-11 17.5-31 26.5v109h148v-340h-80l110-149 110 149h-80v340h148v-104h-42v-144h144v144h-42v104q0 24-18 42t-42 18H510v111q19.95 10.65 30.97 29.83Q552-172 552-152q0 32-20 52t-52 20q-32 0-52-20Z"></path></symbol><symbol id="i-groups" viewBox="0 -960 960 960"><path d="M0-240v-53q0-38.57 41.5-62.78Q83-380 150.38-380q12.16 0 23.39.5t22.23 2.15q-8 17.35-12 35.17-4 17.81-4 37.18v65H0Zm240 0v-65q0-32 17.5-58.5T307-410q32-20 76.5-30t96.5-10q53 0 97.5 10t76.5 30q32 20 49 46.5t17 58.5v65H240Zm540 0v-65q0-19.86-3.5-37.43T765-377.27q11-1.73 22.17-2.23 11.17-.5 22.83-.5 67.5 0 108.75 23.77T960-293v53H780Zm-480-60h360v-6q0-37-50.5-60.5T480-390q-79 0-129.5 23.5T300-305v5ZM149.57-410q-28.57 0-49.07-20.56Q80-451.13 80-480q0-29 20.56-49.5Q121.13-550 150-550q29 0 49.5 20.5t20.5 49.93q0 28.57-20.5 49.07T149.57-410Zm660 0q-28.57 0-49.07-20.56Q740-451.13 740-480q0-29 20.56-49.5Q781.13-550 810-550q29 0 49.5 20.5t20.5 49.93q0 28.57-20.5 49.07T809.57-410ZM480-480q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T600-600q0 50-34.5 85T480-480Zm.35-60Q506-540 523-557.35t17-43Q540-626 522.85-643t-42.5-17q-25.35 0-42.85 17.15t-17.5 42.5q0 25.35 17.35 42.85t43 17.5ZM480-300Zm0-300Z"></path></symbol><symbol id="i-autorenew" viewBox="0 -960 960 960"><path d="M196-331q-20-36-28-72.5t-8-74.5q0-131 94.5-225.5T480-798h43l-80-80 39-39 149 149-149 149-40-40 79-79h-41q-107 0-183.5 76.5T220-478q0 29 5.5 55t13.5 49l-43 43ZM476-40 327-189l149-149 39 39-80 80h45q107 0 183.5-76.5T740-479q0-29-5-55t-15-49l43-43q20 36 28.5 72.5T800-479q0 131-94.5 225.5T480-159h-45l80 80-39 39Z"></path></symbol><symbol id="i-image" viewBox="0 -960 960 960"><path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600v-600H180v600Zm56-97h489L578-473 446-302l-93-127-117 152Zm-56 97v-600 600Z"></path></symbol><symbol id="i-settings" viewBox="0 -960 960 960"><path d="m388-80-20-126q-19-7-40-19t-37-25l-118 54-93-164 108-79q-2-9-2.5-20.5T185-480q0-9 .5-20.5T188-521L80-600l93-164 118 54q16-13 37-25t40-18l20-127h184l20 126q19 7 40.5 18.5T669-710l118-54 93 164-108 77q2 10 2.5 21.5t.5 21.5q0 10-.5 21t-2.5 21l108 78-93 164-118-54q-16 13-36.5 25.5T592-206L572-80H388Zm48-60h88l14-112q33-8 62.5-25t53.5-41l106 46 40-72-94-69q4-17 6.5-33.5T715-480q0-17-2-33.5t-7-33.5l94-69-40-72-106 46q-23-26-52-43.5T538-708l-14-112h-88l-14 112q-34 7-63.5 24T306-642l-106-46-40 72 94 69q-4 17-6.5 33.5T245-480q0 17 2.5 33.5T254-413l-94 69 40 72 106-46q24 24 53.5 41t62.5 25l14 112Zm44-210q54 0 92-38t38-92q0-54-38-92t-92-38q-54 0-92 38t-38 92q0 54 38 92t92 38Zm0-130Z"></path></symbol></svg>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/">MAK&nbsp;SYNTH</a>
+    <ul class="nav-list" id="navmenu"><li><a href="/about/">About</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/process/">The build</a></li><li><a href="/setup/" aria-current="page">Setup</a></li><li><a href="/downloads/">Downloads</a></li></ul>
+    <div class="header-tools">
+      <button class="theme-toggle js-only" type="button" data-theme-toggle aria-label="Switch to dark theme">
+        <span class="icon-dark"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-dark_mode"></use></svg></span><span class="icon-light"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-light_mode"></use></svg></span>
+      </button>
+      <div class="settings-wrap js-only">
+        <button class="icon-btn" type="button" data-settings-toggle aria-expanded="false" aria-haspopup="true" aria-controls="display-settings" aria-label="Display settings">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-settings"></use></svg>
+        </button>
+        <div class="settings-panel" id="display-settings" data-settings-panel hidden role="dialog" aria-label="Display settings">
+          <div class="settings-row">
+            <h3>Contrast</h3>
+            <div class="seg" role="group" aria-label="Contrast">
+              <button type="button" data-seg="contrast" data-val="auto" aria-pressed="true">Auto</button>
+              <button type="button" data-seg="contrast" data-val="high" aria-pressed="false">High</button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <h3>Text size</h3>
+            <div class="seg" role="group" aria-label="Text size">
+              <button type="button" data-textstep="dec" title="Decrease text size">A&minus;</button>
+              <button type="button" data-textstep="reset" title="Reset text size"><span data-step-label>0</span></button>
+              <button type="button" data-textstep="inc" title="Increase text size">A+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="nav-toggle js-only" type="button" aria-expanded="false" aria-controls="navmenu" aria-label="Menu">
+        <span class="icon-open"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-menu"></use></svg></span><span class="icon-close"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-close"></use></svg></span>
+      </button>
+    </div>
+  </div>
+</header>
+<main id="main">
+<section class="section section--tight">
+  <div class="container stack">
+    <h1>Set up your MAK&nbsp;SYNTH</h1>
+    <p class="lead" style="max-width:60ch">Once the hardware is assembled, three steps get it making sound: download the files, flash the controller, and start the sound engine. Plan about 20 to 30 minutes the first time, mostly installing software.</p>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container">
+    <h2>Before you start</h2>
+    <div class="feature-split" style="margin-top:1.25rem">
+      <div class="grid grid-2" style="align-content:start">
+        <div class="card card--plain"><h3>You need</h3><ul><li>Your assembled MAK Synth controller and a USB cable.</li><li>A computer running Windows or macOS.</li></ul></div>
+        <div class="card card--plain"><h3>Free software to install</h3><ul><li><a href="https://www.arduino.cc/en/software" target="_blank" rel="noopener noreferrer">Arduino IDE<svg class="ext-icon" role="img"><title>Opens in a new tab</title><use href="#i-open_in_new"></use></svg></a> to flash the controller.</li><li><a href="https://supercollider.github.io/" target="_blank" rel="noopener noreferrer">SuperCollider 3.14 or newer<svg class="ext-icon" role="img"><title>Opens in a new tab</title><use href="#i-open_in_new"></use></svg></a> for the sound engine.</li></ul></div>
+      </div>
+      <figure class="figure">
+        <img src="/assets/img/synth-white-1053.webp" srcset="/assets/img/synth-white-480.webp 480w, /assets/img/synth-white-800.webp 800w, /assets/img/synth-white-1053.webp 1053w" sizes="(min-width:52rem) 40vw, 100vw" width="1053" height="692" alt="The assembled white MAK Synth controller with its six labeled knobs and twelve-key keyboard." loading="lazy" decoding="async">
+        <figcaption>The assembled controller. Connect it to your computer with a USB cable.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container">
+    <h2>Three steps to sound</h2>
+    <ol class="steps" style="margin-top:1.25rem">
+      <li><h3>Download the source files</h3><p>You need two files: <code>mak_synth.ino</code> (the controller firmware) and <code>mak_synth.scd</code> (the sound engine). Save them where you can find them.</p><div class="btn-row" style="margin-top:.85rem"><a class="btn" href="/downloads/">Go to the downloads page</a></div></li>
+      <li><h3>Flash the controller firmware</h3><p>Open <code>mak_synth.ino</code> in the Arduino IDE. Connect the controller with a USB cable, then choose your board and its port under the Tools menu. Click Upload. When the IDE shows "Done uploading," the controller is ready. The firmware runs at 115200 baud, which the sound engine already expects.</p></li>
+      <li><h3>Start the sound engine</h3><p>Open <code>mak_synth.scd</code> in SuperCollider. Set the OS selector in the window to Windows or macOS so it looks for the right port, then run the whole block of code: click inside it and press <code>Ctrl+Enter</code> (or <code>Cmd+Enter</code> on macOS). The audio server boots, a full-screen window opens, and the status reads CONNECTED once it finds your controller.</p></li>
+      <li><h3>Play and explore</h3><p>Press the keys to play notes and turn the knobs to shape the sound. The top row sets the waveform and octave. The four envelope knobs and two filter knobs change the sound as you move them, and the oscilloscope, spectral analyzer, and envelope graph update in real time.</p></li>
+    </ol>
+    <div class="grid grid-2" style="margin-top:1.75rem">
+      <figure class="figure">
+        <img src="/assets/img/prototypes-bench-1200.webp" srcset="/assets/img/prototypes-bench-480.webp 480w, /assets/img/prototypes-bench-800.webp 800w, /assets/img/prototypes-bench-1200.webp 1200w" sizes="(min-width:56rem) 50vw, 100vw" width="1200" height="899" alt="MAK Synth enclosures and the circuit board on a workbench next to an Arduino Uno during assembly." loading="lazy" decoding="async">
+        <figcaption>The controller connects to the computer through the Arduino over USB.</figcaption>
+      </figure>
+      <figure class="figure">
+        <img src="/assets/img/synth-in-use-1920.webp" srcset="/assets/img/synth-in-use-640.webp 640w, /assets/img/synth-in-use-1024.webp 1024w, /assets/img/synth-in-use-1536.webp 1536w, /assets/img/synth-in-use-1920.webp 1920w" sizes="(min-width:56rem) 50vw, 100vw" width="1920" height="1438" alt="The sound engine running on screen while a hand plays the MAK Synth keys." loading="lazy" decoding="async">
+        <figcaption>When everything is connected, the status reads CONNECTED and playing a key makes sound.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2>If something is not working</h2>
+    <dl class="spec" style="margin-top:1.25rem">
+      <div><dt>The status reads NO DEVICE</dt><dd>Check that the controller is connected by USB and that the OS selector matches your computer. The engine looks for a COM port on Windows and a usbmodem or usbserial port on macOS, and it skips Bluetooth serial ports on Windows.</dd></div>
+      <div><dt>There is no sound</dt><dd>Make sure the audio server booted, which SuperCollider reports in its post window, and that your system output is not muted. A very low Sustain setting also makes held notes quiet, so try raising that knob.</dd></div>
+      <div><dt>A note sticks or playback cuts out</dt><dd>Unplugging the controller stops all notes. Reconnect it and run the file again to reinitialize the connection.</dd></div>
+    </dl>
+    <div class="btn-row" style="margin-top:1.75rem"><a class="btn" href="/downloads/">Download the files</a></div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand footer-brand" href="/" data-top>MAK&nbsp;SYNTH</a>
+        <p class="muted" style="margin-top:.75rem">An educational kit to learn sound synthesis and electronics.</p>
+      </div>
+      <nav aria-label="Site">
+        <h2>Explore</h2>
+        <ul><li><a href="/about/" data-top>About</a></li><li><a href="/how-it-works/" data-top>How it works</a></li><li><a href="/process/" data-top>The build</a></li><li><a href="/setup/" data-top>Setup</a></li><li><a href="/downloads/" data-top>Downloads</a></li></ul>
+      </nav>
+      <div>
+        <h2>Software needed</h2>
+        <ul>
+          <li><a href="https://www.arduino.cc/en/software" target="_blank" rel="noopener noreferrer">Arduino IDE<svg class="ext-icon" role="img"><title>Opens in a new tab</title><use href="#i-open_in_new"></use></svg></a></li>
+          <li><a href="https://supercollider.github.io/" target="_blank" rel="noopener noreferrer">SuperCollider<svg class="ext-icon" role="img"><title>Opens in a new tab</title><use href="#i-open_in_new"></use></svg></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year">2026</span> MAK&nbsp;SYNTH</span>
+      <span class="muted">Built to teach the engineering behind electronic music.</span>
+    </div>
+  </div>
+</footer>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>
