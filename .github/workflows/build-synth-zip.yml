@@ -20,7 +20,8 @@ jobs:
       - name: Rebuild the zip
         run: |
           rm -f assets/downloadables/synthFiles.zip
-          zip -X -j assets/downloadables/synthFiles.zip assets/downloadables/synthFiles/*
+          cd assets/downloadables/synthFiles
+          zip -X -D -r ../synthFiles.zip .
 
       - name: Commit the zip
         run: |
