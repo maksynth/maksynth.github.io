@@ -95,11 +95,11 @@
 
 <section class="section section--tight">
   <div class="container">
-    <h2>Three steps to sound</h2>
+    <h2>The steps to sound</h2>
     <ol class="steps" style="margin-top:1.25rem">
-      <li><h3>Download the source files</h3><p>You need two files: <code>mak_synth.ino</code> (the controller firmware) and <code>mak_synth.scd</code> (the sound engine). Save them where you can find them.</p><div class="btn-row" style="margin-top:.85rem"><a class="btn" href="/downloads/">Go to the downloads page</a></div></li>
-      <li><h3>Flash the controller firmware</h3><p>Open <code>mak_synth.ino</code> in the Arduino IDE. Connect the controller with a USB cable, then choose your board and its port under the Tools menu. Click Upload. When the IDE shows "Done uploading," the controller is ready. The firmware runs at 115200 baud, which the sound engine already expects.</p></li>
-      <li><h3>Start the sound engine</h3><p>Open <code>mak_synth.scd</code> in SuperCollider. Set the OS selector in the window to Windows or macOS so it looks for the right port, then run the whole block of code: click inside it and press <code>Ctrl+Enter</code> (or <code>Cmd+Enter</code> on macOS). The audio server boots, a full-screen window opens, and the status reads CONNECTED once it finds your controller.</p></li>
+      <li><h3>Download the source files</h3><p>Download <code>synthFiles.zip</code> and unzip it somewhere you can find it. You get a folder named <code>synthFiles</code> with two files: <code>synthFile.ino</code> (the controller firmware) and <code>synthFile.scd</code> (the sound engine).</p><div class="btn-row" style="margin-top:.85rem"><a class="btn" href="/downloads/">Go to the downloads page</a></div></li>
+      <li><h3>Flash the controller firmware</h3><p>Open <code>synthFile.ino</code> in the Arduino IDE. If the IDE asks to create a sketch folder and move the file, click OK. Connect the controller with a USB cable, then choose your board and its port under the Tools menu. Click Upload. When the IDE shows "Done uploading," the controller is ready. The firmware runs at 115200 baud, which the sound engine already expects.</p></li>
+      <li><h3>Start the sound engine</h3><p>Open <code>synthFile.scd</code> in SuperCollider. Set the OS selector in the window to Windows or macOS so it looks for the right port, then run the whole block of code: click inside it and press <code>Ctrl+Enter</code> (or <code>Cmd+Enter</code> on macOS). The audio server boots, a full-screen window opens, and the status reads CONNECTED once it finds your controller.</p></li>
       <li><h3>Play and explore</h3><p>Press the keys to play notes and turn the knobs to shape the sound. The top row sets the waveform and octave. The four envelope knobs and two filter knobs change the sound as you move them, and the oscilloscope, spectral analyzer, and envelope graph update in real time.</p></li>
     </ol>
     <div class="grid grid-2" style="margin-top:1.75rem">

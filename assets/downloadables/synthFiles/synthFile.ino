@@ -3,7 +3,6 @@
 const int NUM_KEYS = 12;
 const int NUM_POTS = 6;
 
-// IMPORTANT ORDER: A5 → A0
 int potPins[NUM_POTS] = {A5, A4, A3, A2, A1, A0};
 int keyPins[NUM_KEYS] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
 
@@ -11,8 +10,10 @@ int lastKeyState[NUM_KEYS];
 int lastPotVal[NUM_POTS];
 int smoothPot[NUM_POTS];
 
+const int POT_THRESHOLD = 18; 
+
 unsigned long lastDebounce[NUM_KEYS];
-int debounceDelay = 25; // Optimized from 80ms for immediate musical response
+int debounceDelay = 25; 
 
 void sendPacket(int type, int id, int val) {
   Serial.print("<");
@@ -41,9 +42,7 @@ void setup() {
 }
 
 void loop() {
-  // =========================
-  // KEYS (FAST + RELIABLE)
-  // =========================
+  
   for(int i=0; i<NUM_KEYS; i++){
     int state = digitalRead(keyPins[i]);
 
@@ -52,23 +51,22 @@ void loop() {
         lastDebounce[i] = millis();
         lastKeyState[i] = state;
 
-        // LOW = pressed (0), HIGH = released (1)
+      
         int val = (state == LOW) ? 0 : 1;
         sendPacket(0, i, val);
       }
     }
   }
 
-  // =========================
-  // POTS (SMOOTH + RESPONSIVE)
-  // =========================
-  for(int i=0; i<NUM_POTS; i++){
-    int raw = analogRead(potPins[i]);
 
-    // light smoothing (no lag, removes jitter)
+  for(int i=0; i<NUM_POTS; i++){
+    int raw = 1023 - analogRead(potPins[i]); //change back to analogRead(potPins[i]) depending on which kit is given
+
+ 
     smoothPot[i] = (smoothPot[i] * 3 + raw) / 4;
 
-    if(abs(smoothPot[i] - lastPotVal[i]) > 2){
+   
+    if(abs(smoothPot[i] - lastPotVal[i]) > POT_THRESHOLD){
       lastPotVal[i] = smoothPot[i];
       sendPacket(1, i, smoothPot[i]);
     }

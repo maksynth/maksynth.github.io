@@ -4,9 +4,7 @@ s.boot;
 (
 s.waitForBoot({
 
-    // =========================
-    // UI VARIABLES
-    // =========================
+
     var win, scopeView, controlView, waveMenu, statusText;
     var stethoscope, freqScope, envGraph;
     var b, pad;
@@ -28,38 +26,40 @@ s.waitForBoot({
     var attackLabel, decayLabel, sustainLabel, releaseLabel;
     var cutoffLabel, resLabel, octaveLabel, waveLabel, osLabel;
 
-    // PERFORMANCE FLAG: Tracks if the GUI needs to be redrawn
+
     var guiDirty = true;
 
-    // =========================
-    // OS DETECTION & STATE
-    // =========================
-    ~detectedOS = thisProcess.platform.name; // \windows, \osx, or \linux
-    ~osIndex = if(~detectedOS == \windows) { 0 } { 1 }; // 0: Windows, 1: macOS
+    ~lastPotVals = Array.fill(6, nil);
 
-    ~attack = 0.02;
-    ~decay = 0.15;
-    ~sustain = 0.7;
-    ~release = 0.2;
 
-    ~cutoff = 8000;
-    ~res = 0.2;
+    ~detectedOS = thisProcess.platform.name;
+    ~osIndex = if(~detectedOS == \windows) { 0 } { 1 };
+
+    ~attack = 0.15;
+    ~decay = 0.6;
+    ~sustain = 0.9;
+    ~release = 1.2;
+    ~cutoff = 6500;
+    ~res = 0.45;
 
     ~wave = 0;
 
-    ~octaves = [36,48,60,72];
+    ~octaves = [36, 48, 60, 72];
     ~octaveIndex = 1;
     ~baseMidi = ~octaves[~octaveIndex];
+
+
+    ~cMajorIntervals = [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19];
 
     ~voices = Array.fill(12, nil);
     ~buttonState = Array.fill(12, 0);
 
-    // Track active voice count dynamically
+
     ~activeCount = 0;
 
-    ~cutoffBus = Bus.control(s,1);
-    ~resBus = Bus.control(s,1);
-    ~countBus = Bus.control(s,1);
+    ~cutoffBus = Bus.control(s, 1);
+    ~resBus = Bus.control(s, 1);
+    ~countBus = Bus.control(s, 1);
 
     s.sync;
 
@@ -67,19 +67,17 @@ s.waitForBoot({
     ~resBus.set(~res);
     ~countBus.set(0);
 
-    // =========================
-    // SYNTH
-    // =========================
+
     SynthDef(\voice, { |freq=440, gate=0, wave=0,
-        attack=0.02, decay=0.15, sustain=0.7, release=0.2|
+        attack=0.15, decay=0.6, sustain=0.9, release=1.2|
 
         var sig, env, cutoff, res, voiceCount, ampScaler;
 
-        // Read real-time voice count from bus for volume management
         voiceCount = In.kr(~countBus, 1);
 
+
         cutoff = Lag3.kr(In.kr(~cutoffBus, 1), 0.15);
-        res = In.kr(~resBus, 1); // Direct mapping without Lag3
+        res = Lag3.kr(In.kr(~resBus, 1), 0.15);
 
         env = EnvGen.kr(
             Env.adsr(attack, decay, sustain, release),
@@ -90,13 +88,13 @@ s.waitForBoot({
         sig = Select.ar(wave, [
             SinOsc.ar(freq),
             Saw.ar(freq),
-            Pulse.ar(freq,0.5),
+            LFTri.ar(freq),
+            Pulse.ar(freq, 0.5),
             WhiteNoise.ar(0.05)
         ]);
 
         sig = RLPF.ar(sig, cutoff.clip(40, 15000), res.clip(0.01, 0.85));
 
-        // POLYPHONIC HEADROOM COMPENSATION
         ampScaler = 0.25 / (voiceCount.max(1).sqrt);
 
         Out.ar(0, sig * env * ampScaler ! 2);
@@ -104,14 +102,12 @@ s.waitForBoot({
 
     s.sync;
 
-    // =========================
-    // NOTE SYSTEM (SAFE)
-    // =========================
     ~noteOn = { |id|
-        var freq = (~baseMidi + id).midicps;
+        var noteOffset = ~cMajorIntervals.at(id);
+        var freq = (~baseMidi + noteOffset).midicps;
 
         if(~voices[id].notNil){
-            ~voices[id].set(\gate,0);
+            ~voices[id].set(\gate, 0);
             ~voices[id] = nil;
             ~activeCount = (~activeCount - 1).max(0);
         };
@@ -133,7 +129,7 @@ s.waitForBoot({
 
     ~noteOff = { |id|
         if(~voices[id].notNil){
-            ~voices[id].set(\gate,0);
+            ~voices[id].set(\gate, 0);
             ~voices[id] = nil;
             ~activeCount = (~activeCount - 1).max(0);
             ~countBus.set(~activeCount);
@@ -153,9 +149,6 @@ s.waitForBoot({
         guiDirty = true;
     };
 
-    // =========================
-    // GUI
-    // =========================
     win = Window("MAK SYNTH", Window.screenBounds)
         .background_(darkBg)
         .front;
@@ -214,7 +207,7 @@ s.waitForBoot({
     waveGroup = View();
     waveGroup.layout = HLayout(
         waveLabel = StaticText().string_("<b>Waveform:</b>").stringColor_(textC).font_(Font(Font.defaultSansFace, 14)),
-        waveMenu = PopUpMenu().items_(["Sine","Saw","Pulse","Noise"]).minHeight_(35).fixedWidth_(110)
+        waveMenu = PopUpMenu().items_(["Sine","Saw","Triangle","Pulse","Noise"]).minHeight_(35).fixedWidth_(110)
     ).margins_(0).spacing_(8);
 
     waveMenu.action_({ |menu|
@@ -315,9 +308,7 @@ s.waitForBoot({
     controlView.layout.add(leftControlPanel, stretch: 1.4);
     controlView.layout.add(envContainer, stretch: 1);
 
-    // =========================
-    // DEBOUNCED GUI ENGINE
-    // =========================
+
     ~updateGUI = {
         var totalTime, aX, dX, sX, rX, envData;
         var attStr, decStr, susStr, relStr, cutStr, resStr, octStr;
@@ -328,7 +319,7 @@ s.waitForBoot({
         relStr = "<b>Release:</b> " ++ ~release.round(0.001) ++ "s";
 
         cutStr = "<b>Cutoff:</b> " ++ ~cutoff.round(1) ++ " Hz";
-        resStr = "<b>Resonance:</b> " ++ ~res.round(0.001);
+        resStr = "<b>Resonance:</b> " ++ ((1 - ~res).linlin(0.01, 0.99, 0, 100).round(1)) ++ "%";
         octStr = "<b>Octave:</b> " ++ (~octaveIndex + 1);
 
         totalTime = ~attack + ~decay + ~release + 0.5;
@@ -366,9 +357,7 @@ s.waitForBoot({
         }
     }).play(AppClock);
 
-    // =========================
-    // SERIAL (PLATFORM & AUTO-DETECT)
-    // =========================
+
     ~findPort = {
         var devices = SerialPort.devices;
         var matched;
@@ -429,7 +418,7 @@ s.waitForBoot({
                 var stillExists = currentDevices.includesEqual(~detectedPort);
 
                 if(stillExists.not) {
-                    "--- HARDWARE DISCONNECTED (USB PULLED) ---".postln;
+					"HARDWARE DISCONNECTED (USB PULLED)" .postln;
 
                     ~allNotesOff.value;
 
@@ -466,17 +455,25 @@ s.waitForBoot({
                                     };
                                 };
 
-                                if(type == 1){
-                                    switch(id,
-                                        0, { ~attack = val.linexp(0,1023,0.01,1.5) },
-                                        1, { ~decay = val.linexp(0,1023,0.01,2.5) },
-                                        2, { ~sustain = val.linlin(0,1023,0,1) },
-                                        3, { ~release = val.linexp(0,1023,0.01,4.0) },
-                                        4, { ~cutoff = val.linexp(0,1023,120,12000); ~cutoffBus.set(~cutoff) },
-                                        5, { ~res = val.linexp(0,1023,0.01,0.99); ~resBus.set(~res) }
-                                    );
 
-                                    guiDirty = true;
+                                if(type == 1){
+                                    var thresh = 20;
+                                    var isFirstRead = ~lastPotVals[id].isNil;
+
+                                    if(isFirstRead or: { (~lastPotVals[id] - val).abs > thresh }) {
+                                        ~lastPotVals[id] = val;
+
+                                        switch(id,
+                                            0, { ~attack = val.linexp(0,1023,0.01,1.5) },
+                                            1, { ~decay = val.linexp(0,1023,0.01,2.5) },
+                                            2, { ~sustain = val.linlin(0,1023,0,1) },
+                                            3, { ~release = val.linexp(0,1023,0.01,4.0) },
+                                            4, { ~cutoff = val.linexp(0,1023,120,12000); ~cutoffBus.set(~cutoff) },
+                                            5, { ~res = val.linexp(0,1023,0.99,0.01); ~resBus.set(~res) }
+                                        );
+
+                                        guiDirty = true;
+                                    };
                                 };
                             };
                         };
@@ -501,10 +498,3 @@ s.waitForBoot({
 
 });
 )
-
-
-SynthDef.new(\synth, {
-
-
-
-Server.killAll;
