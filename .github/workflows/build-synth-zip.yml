@@ -1,0 +1,35 @@
+# Rebuilds the site's download whenever the source files change on main.
+name: Build synth zip
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "assets/downloadables/synthFiles/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rebuild the zip
+        run: |
+          rm -f assets/downloadables/synthFiles.zip
+          zip -X -j assets/downloadables/synthFiles.zip assets/downloadables/synthFiles/*
+
+      - name: Commit the zip
+        run: |
+          git add assets/downloadables/synthFiles.zip
+          if git diff --cached --quiet; then
+            echo "Zip is unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Rebuild synthFiles.zip"
+          git push
