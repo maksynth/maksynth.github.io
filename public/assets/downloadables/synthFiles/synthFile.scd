@@ -44,7 +44,7 @@ s.waitForBoot({
 
     ~wave = 0;
 
-    ~octaves = [36, 48, 60, 72];
+    ~octaves = [36, 48, 60];
     ~octaveIndex = 1;
     ~baseMidi = ~octaves[~octaveIndex];
 
@@ -60,6 +60,7 @@ s.waitForBoot({
     ~cutoffBus = Bus.control(s, 1);
     ~resBus = Bus.control(s, 1);
     ~countBus = Bus.control(s, 1);
+    ~masterBus = Bus.audio(s, 2);
 
     s.sync;
 
@@ -69,7 +70,8 @@ s.waitForBoot({
 
 
     SynthDef(\voice, { |freq=440, gate=0, wave=0,
-        attack=0.15, decay=0.6, sustain=0.9, release=1.2|
+        attack=0.15, decay=0.6, sustain=0.9, release=1.2,
+        outBus=0|
 
         var sig, env, cutoff, res, voiceCount, ampScaler;
 
@@ -97,10 +99,28 @@ s.waitForBoot({
 
         ampScaler = 0.25 / (voiceCount.max(1).sqrt);
 
-        Out.ar(0, sig * env * ampScaler ! 2);
+        Out.ar(outBus, sig * env * ampScaler ! 2);
+    }).add;
+
+    // Master output stage: combines all voices, lowers overall level,
+    // and limits peaks before sending audio to the speakers.
+    SynthDef(\masterOut, { |inBus=0, masterGain=0.35, limit=0.35|
+        var sig;
+
+        sig = In.ar(inBus, 2);
+        sig = sig * masterGain;
+        sig = Limiter.ar(sig, limit, 0.01);
+        Out.ar(0, sig);
     }).add;
 
     s.sync;
+
+    // Place the master processor after the voices in the default group.
+    ~masterSynth = Synth.tail(s, \masterOut, [
+        \inBus, ~masterBus.index,
+        \masterGain, 0.35,
+        \limit, 0.35
+    ]);
 
     ~noteOn = { |id|
         var noteOffset = ~cMajorIntervals.at(id);
@@ -119,7 +139,8 @@ s.waitForBoot({
             \decay, ~decay,
             \sustain, ~sustain,
             \release, ~release,
-            \gate, 1
+            \gate, 1,
+            \outBus, ~masterBus.index
         ]);
 
         ~activeCount = ~activeCount + 1;
@@ -230,7 +251,7 @@ s.waitForBoot({
     });
 
     octPlusButton.action_({
-        if(~octaveIndex < 3) {
+        if(~octaveIndex < 2) {
             ~octaveIndex = ~octaveIndex + 1;
             ~baseMidi = ~octaves[~octaveIndex];
             guiDirty = true;
@@ -468,8 +489,8 @@ s.waitForBoot({
                                             1, { ~decay = val.linexp(0,1023,0.01,2.5) },
                                             2, { ~sustain = val.linlin(0,1023,0,1) },
                                             3, { ~release = val.linexp(0,1023,0.01,4.0) },
-                                            4, { ~cutoff = val.linexp(0,1023,120,12000); ~cutoffBus.set(~cutoff) },
-                                            5, { ~res = val.linexp(0,1023,0.99,0.01); ~resBus.set(~res) }
+                                            4, { ~cutoff = val.linexp(0,1023,150,8000); ~cutoffBus.set(~cutoff) },
+                                            5, { ~res = val.linexp(0,1023,0.99,0.25); ~resBus.set(~res) }
                                         );
 
                                         guiDirty = true;
@@ -493,7 +514,10 @@ s.waitForBoot({
     win.onClose = {
         freqScope.kill;
         stethoscope.free;
+        ~allNotesOff.value;
         if(~port.notNil) { ~port.close; };
+        if(~masterSynth.notNil) { ~masterSynth.free; };
+        if(~masterBus.notNil) { ~masterBus.free; };
     };
 
 });
