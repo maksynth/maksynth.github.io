@@ -1,7 +1,7 @@
 int digitalPin = 2;
 void setup() {
   Serial.begin(115200);
-  pinMode(INPUT_PULLUP,digitalPin);
+  pinMode(digitalPin, INPUT_PULLUP);
 
 }
 
