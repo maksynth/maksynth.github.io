@@ -1,0 +1,53 @@
+---
+import { FontAwesomeIcon } from '../lib/fa';
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand-col">
+        <a class="footer-brand" href="/" translate="no">MAK&nbsp;SYNTH</a>
+        <p>A synthesizer kit for learning sound synthesis and electronics.</p>
+      </div>
+      <nav class="footer-col" aria-label="The Synth">
+        <h2>The synth</h2>
+        <ul>
+          <li><a href="/how-it-works">How it works</a></li>
+          <li><a href="/process">The build</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Getting Started">
+        <h2>Get it running</h2>
+        <ul>
+          <li><a href="/setup">Setup guide</a></li>
+          <li><a href="/downloads">Downloads</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Additional Software">
+        <h2>Software</h2>
+        <ul>
+          <li><a href="https://www.arduino.cc/en/software" target="_blank" rel="noopener noreferrer"><span translate="no">Arduino IDE</span><FontAwesomeIcon icon={faArrowUpRightFromSquare} className="ext-icon" /><span class="sr-only"> (opens in a new tab)</span></a></li>
+          <li><a href="https://supercollider.github.io/" target="_blank" rel="noopener noreferrer"><span translate="no">SuperCollider</span><FontAwesomeIcon icon={faArrowUpRightFromSquare} className="ext-icon" /><span class="sr-only"> (opens in a new tab)</span></a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="copyright-year">{year}</span> <span translate="no">MAK SYNTH</span></span>
+      <a href="/accessibility">Accessibility settings</a>
+    </div>
+  </div>
+</footer>
+<script>
+  // Keeps the copyright year current even if the static build is old.
+  const el = document.getElementById('copyright-year');
+  if (el) el.textContent = String(new Date().getFullYear());
+
+  // Printed pages include the answers inside collapsed sections.
+  const opened: HTMLDetailsElement[] = [];
+  window.addEventListener('beforeprint', () => {
+    document.querySelectorAll<HTMLDetailsElement>('.faq details:not([open])').forEach((d) => { d.open = true; opened.push(d); });
+  });
+  window.addEventListener('afterprint', () => { opened.splice(0).forEach((d) => { d.open = false; }); });
+</script>

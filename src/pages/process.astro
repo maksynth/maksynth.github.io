@@ -1,0 +1,83 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Motion from '../components/Motion.astro';
+
+const stages = [
+  {
+    title: 'The early concept',
+    text: 'An early concept explored a bigger layout with a full keyboard, a screen, and separate sections for envelopes, effects, and filters. Renders like this set the direction before any hardware existed.',
+    src: '/img/concept-ms1-800.webp', srcset: '/img/concept-ms1-480.webp 480w, /img/concept-ms1-800.webp 800w, /img/concept-ms1-1027.webp 1027w', w: 800, h: 563,
+    alt: 'A concept render of a larger synthesizer with a full keyboard, wooden end panels, a screen and labeled control sections.',
+  },
+  {
+    title: 'Modeling with CAD',
+    text: 'The enclosure, the control layout, and the on-screen interface were modeled in CAD. Working in 3D made it possible to place every knob, key, and label and check the design before printing anything.',
+    src: '/img/cad-fusion-749.webp', srcset: '/img/cad-fusion-480.webp 480w, /img/cad-fusion-749.webp 749w', w: 749, h: 379, contain: true,
+    alt: 'A Fusion 360 model of the synthesizer with a decorated front panel, a keyboard and a screen.',
+  },
+  {
+    title: 'Building prototypes and assembling',
+    text: '3D-printed boards and the control board came together on the bench. Printing made it quick to test part placement, assembly and fit, and to revise the design between versions.',
+    src: '/img/prototypes-bench-800.webp', srcset: '/img/prototypes-bench-480.webp 480w, /img/prototypes-bench-800.webp 800w, /img/prototypes-bench-1200.webp 1200w', w: 800, h: 599,
+    alt: 'Three red 3D-printed MAK SYNTH enclosures on a workbench with a circuit board, an Arduino Uno and a soldering iron.',
+  },
+  {
+    title: 'The circuit board',
+    text: 'A custom printed circuit board carries the buttons and the header that connects to the Arduino. This step turned the base prototype into something people can easily build as a kit.',
+    src: '/img/pcb-kit-800.webp', srcset: '/img/pcb-kit-480.webp 480w, /img/pcb-kit-800.webp 800w, /img/pcb-kit-1200.webp 1200w', w: 800, h: 599,
+    alt: 'The green MAK SYNTH circuit board with a row of twelve buttons and a labeled pin header.',
+  },
+  {
+    title: 'The finished kit',
+    text: 'The current version of MAK SYNTH: A compact controller with twelve keys and six knobs, all running the SuperCollider sound engine and its live visualizers.',
+    src: '/img/synth-white-800.webp', srcset: '/img/synth-white-480.webp 480w, /img/synth-white-800.webp 800w, /img/synth-white-1053.webp 1053w', w: 800, h: 526, contain: true,
+    alt: 'The finished white MAK SYNTH controller with six labeled knobs and a twelve-key keyboard.',
+  },
+];
+---
+<Layout
+  pageTitle="The building process"
+  description="How MAK SYNTH went from concept renders and CAD models through four hardware prototypes and a custom circuit board to a finished kit."
+  path="/process"
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>The building process</h1>
+      <p class="lead">Before the version you see today, MAK SYNTH went through four hardware prototypes. Each one reworked the electronics, the layout, the internals, or how it’s used.</p>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-label="Stages of the build">
+    <div class="container">
+      <div class="timeline-wrap" data-line-root>
+        <span class="timeline__line" aria-hidden="true"><span class="timeline__fill" data-line-fill></span></span>
+        <ol class="timeline">
+          {stages.map((s, i) => (
+            <li class="stage" data-reveal>
+              <span class="stage__marker" aria-hidden="true">{i + 1}</span>
+              <div class="stage__text">
+                <h2>{s.title}</h2>
+                <p>{s.text}</p>
+              </div>
+              <figure class={`stage__media${s.contain ? ' stage__media--contain' : ''}`}>
+                <img src={s.src} srcset={s.srcset} sizes="(min-width: 56rem) 32rem, 88vw" width={s.w} height={s.h} alt={s.alt} loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : 'auto'} decoding="async" />
+              </figure>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface cta-band" aria-labelledby="next-title">
+    <div class="container" data-reveal>
+      <h2 id="next-title">Want to learn more about the current version?</h2>
+      <p>Visit the about page which covers the goal of MAK SYNTH, what it is built to do, and the decisions that went into it, including PCB design and workshops.</p>
+      <div class="btn-row">
+        <a class="btn" href="/about">Read about the project</a>
+        <a class="btn btn--secondary" href="/how-it-works">Learn how it works</a>
+      </div>
+    </div>
+  </section>
+  <Motion />
+</Layout>

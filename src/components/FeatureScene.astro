@@ -1,0 +1,176 @@
+---
+// Apple-style product scene: the synth stays pinned while five steps scroll past.
+// On wide screens with motion allowed, GSAP ScrollTrigger scrubs the pinned stage
+// (zoom to the keys, then the knobs, then cross-fades to the circuit board and the
+// engine). Everywhere else, each step shows its own image in a static stacked layout.
+const steps = [
+  {
+    title: 'The Keys',
+    p: 'Twelve keys that play a C major scale, from C up to the G above the next C. The engine moves them across four octaves, and you can hold all twelve at once.',
+    img: '/img/hero-synth-720.webp', set: '/img/hero-synth-720.webp 720w, /img/hero-synth-1040.webp 1040w, /img/hero-synth-1302.webp 1302w', w: 720, h: 555, cutout: true, cx: 0.44, cy: 0.6, s: 1.25,
+    alt: 'Close-up of the twelve white keys on the MAK SYNTH controller.',
+  },
+  {
+    title: 'The Knobs',
+    p: 'Four that shape the volume of each note over time through attack, decay, sustain, and release. Two that shape a resonant low-pass filter through cutoff and resonance.',
+    img: '/img/hero-synth-720.webp', set: '/img/hero-synth-720.webp 720w, /img/hero-synth-1040.webp 1040w, /img/hero-synth-1302.webp 1302w', w: 720, h: 555, cutout: true, cx: 0.55, cy: 0.3, s: 1.6,
+    alt: 'Close-up of the six labeled knobs on the MAK SYNTH controller.',
+  },
+  {
+    title: 'The Circuit Board',
+    p: 'All the keys sit on a board wired to an Arduino. It reads every press and turn and sends it to your computer over USB.',
+    img: '/img/pcb-kit-800.webp', set: '/img/pcb-kit-480.webp 480w, /img/pcb-kit-800.webp 800w, /img/pcb-kit-1200.webp 1200w', w: 800, h: 599, cutout: false, cx: 0.5, cy: 0.5, s: 1,
+    alt: 'The green MAK SYNTH circuit board with a row of twelve buttons and a pin header.',
+  },
+  {
+    title: 'The Sound Engine',
+    p: 'On your computer, SuperCollider turns each of those messages into sound. Each key becomes a sound with its own oscillator, filter, and envelope.',
+    img: '/img/synth-in-use-800.webp', set: '/img/synth-in-use-480.webp 480w, /img/synth-in-use-800.webp 800w, /img/synth-in-use-1200.webp 1200w', w: 800, h: 599, cutout: false, cx: 0.5, cy: 0.5, s: 1,
+    alt: 'A hand playing the MAK SYNTH while the sound engine runs on the monitor behind it.',
+  },
+  {
+    title: 'The Visualizers',
+    p: 'An oscilloscope, a spectrum analyzer, and an envelope graph react as you play, so you can see what each knob does to the sound.',
+    img: '/img/synth-in-use-800.webp', set: '/img/synth-in-use-480.webp 480w, /img/synth-in-use-800.webp 800w, /img/synth-in-use-1200.webp 1200w', w: 800, h: 599, cutout: false, cx: 0.39, cy: 0.38, s: 2.2,
+    alt: 'The engine on screen: an oscilloscope tracing a sawtooth wave, a spectrum analyzer and an envelope graph.',
+  },
+];
+const cropStyle = (s: { cx: number; cy: number; s: number }) =>
+  `--cx:${s.cx};--cy:${s.cy};--s:${s.s}`;
+---
+<section class="section scene" id="overview" aria-labelledby="scene-title">
+  <div class="container">
+    <div class="section-head section-head--center scene-head" data-reveal>
+      <h2 id="scene-title" class="title-lg">What you build</h2>
+    </div>
+    <div class="scene-grid">
+      <div class="scene-stage" aria-hidden="true">
+        <div class="stage-frame">
+          <div class="stage-viewport">
+            <div class="stage-layer is-first" data-layer="synth">
+              <img src="/img/hero-synth-1040.webp" srcset="/img/hero-synth-720.webp 720w, /img/hero-synth-1040.webp 1040w, /img/hero-synth-1302.webp 1302w" sizes="(min-width: 56rem) 52vw, 92vw" width="1040" height="801" alt="" loading="lazy" decoding="async" />
+            </div>
+            <div class="stage-layer stage-layer--photo" data-layer="pcb">
+              <img src="/img/pcb-kit-1200.webp" srcset="/img/pcb-kit-800.webp 800w, /img/pcb-kit-1200.webp 1200w" sizes="52vw" width="1200" height="899" alt="" loading="lazy" decoding="async" />
+            </div>
+            <div class="stage-layer stage-layer--photo" data-layer="engine">
+              <img src="/img/synth-in-use-1200.webp" srcset="/img/synth-in-use-800.webp 800w, /img/synth-in-use-1200.webp 1200w" sizes="52vw" width="1200" height="899" alt="" loading="lazy" decoding="async" />
+            </div>
+          </div>
+          <ol class="stage-progress">
+            {steps.map(() => <li></li>)}
+          </ol>
+        </div>
+      </div>
+      <ol class="scene-steps">
+        {steps.map((s) => (
+          <li class="scene-step">
+            <div class={`scene-step__media${s.cutout ? ' scene-step__media--cutout' : ''}`}>
+              <img class="crop" style={cropStyle(s)} src={s.img} srcset={s.set} sizes={`calc((100vw - 2rem) * ${s.s})`} width={s.w} height={s.h} alt={s.alt} loading="lazy" decoding="async" />
+            </div>
+            <div class="scene-step__text">
+              <h3>{s.title}</h3>
+              <p>{s.p}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .crop {
+    transform-origin: 50% 50%;
+    transform:
+      translate(calc((0.5 - var(--cx)) * var(--s) * 100%), calc((0.5 - var(--cy)) * var(--s) * 100%))
+      scale(var(--s));
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { motionReduced, onPrefsChange } from '../lib/prefs';
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Zoom states as [center x, center y, scale] on each layer's image.
+  const FULL = { cx: 0.5, cy: 0.5, s: 1 };
+  const KEYS = { cx: 0.44, cy: 0.6, s: 1.25 };
+  const KNOBS = { cx: 0.55, cy: 0.3, s: 1.6 };
+  const SCREEN = { cx: 0.39, cy: 0.38, s: 2.2 };
+  const zoom = (z: typeof FULL) => ({
+    xPercent: (0.5 - z.cx) * z.s * 100,
+    yPercent: (0.5 - z.cy) * z.s * 100,
+    scale: z.s,
+  });
+
+  const scene = document.querySelector<HTMLElement>('.scene');
+  const headerH = () => document.querySelector('.site-header')?.getBoundingClientRect().height ?? 64;
+  let mm: gsap.MatchMedia | null = null;
+
+  function setup() {
+    mm?.revert();
+    if (!scene) return;
+    mm = gsap.matchMedia();
+    mm.add({ wide: '(min-width: 56rem)', reduce: '(prefers-reduced-motion: reduce)' }, (ctx) => {
+      const { wide, reduce } = ctx.conditions as { wide: boolean; reduce: boolean };
+      if (!wide || reduce || motionReduced()) return;
+      scene.classList.add('scene--live');
+      ScrollTrigger.refresh();
+
+      const synth = scene.querySelector('[data-layer="synth"]')!;
+      const pcb = scene.querySelector('[data-layer="pcb"]')!;
+      const engine = scene.querySelector('[data-layer="engine"]')!;
+      const synthImg = synth.querySelector('img')!;
+      const engineImg = engine.querySelector('img')!;
+      const steps = gsap.utils.toArray<HTMLElement>('.scene-step', scene);
+      const dots = gsap.utils.toArray<HTMLElement>('.stage-progress li', scene);
+      const list = scene.querySelector('.scene-steps')!;
+
+      gsap.set(synthImg, zoom(FULL));
+      gsap.set(engineImg, zoom(FULL));
+      gsap.set([pcb, engine], { autoAlpha: 0 });
+
+      // Entering the scene: the whole synth zooms in on the keys.
+      gsap.to(synthImg, {
+        ...zoom(KEYS),
+        ease: 'none',
+        scrollTrigger: { trigger: list, start: 'top bottom', end: () => `top top+=${headerH()}`, scrub: 0.6 },
+      });
+
+      // Through the five steps: knobs, circuit board, engine, visualizers.
+      const tl = gsap.timeline({
+        defaults: { ease: 'power1.inOut', duration: 0.5 },
+        scrollTrigger: {
+          trigger: list,
+          start: () => `top top+=${headerH()}`,
+          end: 'bottom bottom',
+          scrub: 0.6,
+          onUpdate: (self) => {
+            const i = Math.min(steps.length - 1, Math.round(self.progress * (steps.length - 1)));
+            steps.forEach((s, n) => s.classList.toggle('is-active', n === i));
+            dots.forEach((d, n) => d.classList.toggle('is-active', n === i));
+          },
+        },
+      });
+      tl.to(synthImg, zoom(KNOBS), 0.25)
+        .to(pcb, { autoAlpha: 1 }, 1.25)
+        .to(engine, { autoAlpha: 1 }, 2.25)
+        .to(engineImg, zoom(SCREEN), 3.25)
+        .set({}, {}, 4);
+
+      steps[0]?.classList.add('is-active');
+      dots[0]?.classList.add('is-active');
+
+      return () => {
+        scene.classList.remove('scene--live');
+        steps.forEach((s) => s.classList.remove('is-active'));
+        dots.forEach((d) => d.classList.remove('is-active'));
+      };
+    });
+  }
+
+  setup();
+  onPrefsChange(setup);
+</script>

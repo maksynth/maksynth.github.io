@@ -1,0 +1,95 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Motion from '../components/Motion.astro';
+import { FontAwesomeIcon } from '../lib/fa';
+import { faMicrochip, faCube, faGraduationCap, faCode, faPeopleGroup, faRotate, faUsers, faScaleBalanced, faDiagramProject , faHandshake } from '@fortawesome/free-solid-svg-icons';
+
+const learned = [
+  { icon: faUsers, title: 'Understanding people', text: 'The synth is meant for people with little or no experience, so they came first.' },
+  { icon: faScaleBalanced, title: 'Weighing constraints', text: 'Each choice had to be possible to manufacture, assemble, teach, and use.' },
+  { icon: faDiagramProject, title: 'Simplifying systems', text: 'The engineering behind electronic music had to feel approachable.' },
+  { icon: faHandshake, title: 'Designing for others', text: 'The result had to be something another person can pick up and use.' },
+];
+const work = [
+  { icon: faMicrochip, title: 'PCB design', text: 'Custom circuit boards organize the electronics and make assembly simpler, with separate boards for the buttons and the potentiometers.' },
+  { icon: faCube, title: 'CAD and prototyping', text: 'The enclosure and internal layout were modeled in CAD and 3D printed to test part placement, ergonomics, assembly and manufacturing limits.' },
+  { icon: faGraduationCap, title: 'Curriculum', text: 'A beginner curriculum covers sound synthesis, electronics and signal flow through hands-on experiments. It assumes no musical or engineering background.' },
+  { icon: faCode, title: 'Hardware and software', text: 'Arduino firmware reads the controls and sends them to the SuperCollider engine, which meant working across hardware, a serial protocol and software debugging.' },
+  { icon: faPeopleGroup, title: 'Workshops', text: 'Conversations with local makerspaces and public libraries explored hosting workshops, including software installation, hardware access and the room itself.' },
+  { icon: faRotate, title: 'Testing and refinement', text: 'The synth was tested on different computers and operating systems, with installation problems written down and tracked to their cause.' },
+];
+---
+<Layout
+  pageTitle="About"
+  description="An independent project: an educational synthesizer designed over four hardware prototypes, from custom PCBs and CAD to firmware and a curriculum."
+  path="/about"
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>About MAK SYNTH</h1>
+      <p class="lead">An independent project that grew out of an interest in electronics, engineering, and music built to help others learn.</p>
+    </div>
+  </section>
+
+  <section class="section section--tight about-intro" aria-label="The story">
+    <div class="container split">
+      <div class="prose">
+        <p>Prototype by prototype, it became a working educational synthesizer. I did the whole thing myself: designing the circuits and custom PCBs, modeling the physical synthesizer, programming the hardware, and creating custom workshops.</p>
+        <p>My goal was to make the engineering behind electronic music approachable for people with little to no experience and teach people about what goes into making electronic music.</p>
+        <dl class="stats">
+          <div><dt>Hardware prototypes I went through</dt><dd data-count="4">4</dd></div>
+          <div><dt>Custom PCB designs I created</dt><dd data-count="2">2</dd></div>
+        </dl>
+      </div>
+      <figure class="split__media" data-reveal>
+        <img src="/img/concept-ms1-800.webp" srcset="/img/concept-ms1-480.webp 480w, /img/concept-ms1-800.webp 800w, /img/concept-ms1-1027.webp 1027w" sizes="(min-width: 56rem) 34rem, 92vw" width="800" height="563" alt="An early concept render of a larger synthesizer with a full keyboard, a screen and labeled control sections." />
+      </figure>
+    </div>
+  </section>
+
+  <section class="section section--surface" aria-labelledby="work-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <h2 id="work-title">The factors I had to consider</h2>
+        <p>Every decision I made had to make sense, and also be possible to manufacture, assemble, teach, and use.</p>
+      </div>
+      <ul class="card-grid" data-reveal="stagger">
+        {work.map((w) => (
+          <li>
+            <article class="card">
+              <span class="card__icon" aria-hidden="true"><FontAwesomeIcon icon={w.icon} /></span>
+              <h3>{w.title}</h3>
+              <p>{w.text}</p>
+            </article>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="taught-title">
+    <div class="container"><div class="measure prose" data-reveal>
+      <h2 id="taught-title">What I learned</h2>
+      <p>Building MAK SYNTH showed me that engineering something to teach others takes a lot into consideration:</p>
+    </div>
+    <ul class="card-grid card-grid--4 learn-grid" data-reveal="stagger">
+      {learned.map((l) => (
+        <li>
+          <article class="card">
+            <span class="card__icon" aria-hidden="true"><FontAwesomeIcon icon={l.icon} /></span>
+            <h3>{l.title}</h3>
+            <p>{l.text}</p>
+          </article>
+        </li>
+      ))}
+    </ul>
+    <div class="measure prose learn-after" data-reveal>
+      <p>By doing it alone, I was able to see the whole process of product development, from a first idea to a physical instrument built to teach others.</p>
+      <div class="btn-row">
+        <a class="btn" href="/process">See the build</a>
+        <a class="btn btn--secondary" href="/how-it-works">See how it works</a>
+      </div>
+    </div></div>
+  </section>
+  <Motion />
+</Layout>

@@ -1,0 +1,61 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Motion from '../components/Motion.astro';
+import SetupGuide from '../components/SetupGuide.tsx';
+import { FontAwesomeIcon } from '../lib/fa';
+import { faChevronRight, faDownload } from '@fortawesome/free-solid-svg-icons';
+
+const problems = [
+  {
+    q: 'The status reads NO DEVICE',
+    a: 'Check that the controller is connected by USB and that the OS selector matches your computer. The engine looks for a COM port on Windows (it skips Bluetooth serial ports) and a usbmodem or usbserial port on macOS.',
+  },
+  {
+    q: 'There is no sound',
+    a: 'Make sure the audio server started, which SuperCollider reports in its post window, and that your computer isn’t muted. A very low Sustain also makes held notes quiet, so try turning that knob up.',
+  },
+  {
+    q: 'A note sticks or the sound cuts out',
+    a: 'Unplugging the controller stops all notes. Plug it back in and run the file again to reconnect.',
+  },
+];
+---
+<Layout
+  pageTitle="Setup"
+  description="Set up MAK SYNTH in four steps: download the firmware and sound engine, flash the Arduino controller, start SuperCollider and play. About 20 to 30 minutes."
+  path="/setup"
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Set up your synth</h1>
+      <p class="lead">Set up MAK SYNTH in four simple steps: download the firmware and sound engine, flash the Arduino controller, start the SuperCollider, and test it out. Plan on 20 to 30 minutes the first time, mostly spent installing and configuring the software.</p>
+      <div class="btn-row page-head__actions">
+        <a class="btn" href="/assets/downloadables/synthFiles.zip" download><FontAwesomeIcon icon={faDownload} />Download the synth files (ZIP)</a>
+        <a class="btn btn--secondary" href="/downloads">See what’s in the files</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-label="Setup checklist and steps">
+    <div class="container">
+      <SetupGuide client:load />
+    </div>
+  </section>
+
+  <section class="section section--surface" aria-labelledby="problems-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <h2 id="problems-title">Troubleshooting</h2>
+      </div>
+      <div class="faq" data-reveal="stagger">
+        {problems.map((p) => (
+          <details>
+            <summary>{p.q}<FontAwesomeIcon icon={faChevronRight} /></summary>
+            <div class="faq__body"><p>{p.a}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+  <Motion />
+</Layout>
