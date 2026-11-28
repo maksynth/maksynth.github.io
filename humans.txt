@@ -1,12 +1,12 @@
 /* TEAM */
-  Mamoon Khan - Creator of MAK SYNTH
-  EJGCodes - Website Designer & Webmaster
+  [Name and role]
+  [Contact or site]
 
-/* SPECIAL THANKS */
-  Bergen Makerspace for helping setup MAK SYNTH workshops!
+/* THANKS */
+  [People or projects to thank]
 
 /* SITE */
-  Last update: 2026/11/28
+  Last update: 2026/11/23
   Language: English
   Standards: HTML5, CSS3, WCAG 2.2 AA
   Components: Astro, React, GSAP, Lenis, React Bits, Font Awesome Free
